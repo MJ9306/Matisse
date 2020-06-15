@@ -243,6 +243,19 @@ public class MatisseActivity extends AppCompatActivity implements
                     Log.i("SingleMediaScanner", "scan finish!");
                 }
             });
+
+            //2020-06-15 MJ增加广播扫描拍照的文件
+            File storageDir;
+            if (mSpec.captureStrategy.isPublic) {
+                storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+            if (!storageDir.exists()) storageDir.mkdirs();
+            } else {
+                storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            }
+            Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            Uri storageUri = Uri.fromFile(storageDir);
+            mediaScanIntent.setData(storageUri);
+            sendBroadcast(mediaScanIntent);    
             finish();
         }
     }
